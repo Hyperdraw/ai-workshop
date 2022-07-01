@@ -51,4 +51,6 @@ def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_ra
             param_changes[i] = -learning_rate * (loss(model(X, extra, params_plus[i]), Y) - loss(model(X, extra, params_minus[i]), Y)) / (learning_rate / 50)
 
         params += param_changes
-        print('Iteration: ' + str(_) + ', Loss: ' + str(loss(model(X, extra, params), Y)))
+
+        if _ % 100 == 0:
+            print('Iteration: ' + str(_) + ', Loss: ' + str(loss(model(X, extra, params), Y)))
