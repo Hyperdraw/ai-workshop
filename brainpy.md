@@ -35,7 +35,7 @@ and returns the loss as a single number.
 
 ## Gradient Descent API
 
-`def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_rate=0.001)`
+`def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_rate=0.001, differentiation_ratio=0.0001, pool_size=4)`
 
 * `X`: 2D NumPy array - the input rows
 * `Y`: 2D NumPy array - the output rows
@@ -45,6 +45,8 @@ and returns the loss as a single number.
 * `params`: 1D NumPy array - the initial model parameters (will be changed)
 * `iterations`: number - the number of iterations (default 1)
 * `learning_rate`: number - the learning rate (default 0.001)
+* `differentiation_ratio`: number - the proportion of the learning rate to use for numeric differentiation (the smaller the better) (default 0.0001)
+* `pool_size`: number - the number of worker processes to use when computing gradients (default 4)
 
 ## Usage Example (Two-Input, Two-Output Linear Regression)
 
@@ -63,15 +65,26 @@ print(brain.dense(np.array([[3, 4]]), 2, params)) # Make a prediction (again, th
 ### `dense`
 
 A dense linear model. Extra parameter is the number of outputs.
+Expects a number of parameters equal to the number of outputs, times the number of inputs plus one.
 
 ### `dense_classification`
 
 Dense linear model that returns the *sign* of outputs (i.e. only 1s and -1s).
-Only use for prediction. Use `dense` when training. Extra parameter is the number of outputs. 
+Only use for prediction. Use `dense` when training. Extra parameter is the number of outputs.
+Expects a number of parameters equal to the number of outputs, times the number of inputs plus one.
 
 ### `logistic`
 
 Logistic (sigmoid) activated linear model. Extra parameter is the number of outputs.
+Expects a number of parameters equal to the number of outputs, times the number of inputs plus one.
+
+### `dense_relu_net`
+
+Multi-layer dense neural network with ReLU activation on all layers except the last. Extra parameter is a list of widths. The length of that list will be the number of layers. Each value is the number of units (outputs) of that layer. Therefore, the last value in the widths list is the number of outputs of the network.
+
+Expects a number of parameters equal to the sum of the numbers of parameters required for each dense layer. (See `dense` layer for how to calculate the number of required parameters.)
+
+For example, for widths `[16, 16, 4]` expecting 8 inputs, the first two layers need `16 * (8 + 1) = 144` parameters and the last layer needs `4 * (8 + 1) = 36` parameters, so in total the model needs `144 * 2 + 36 = 324` parameters.
 
 ## Losses
 
