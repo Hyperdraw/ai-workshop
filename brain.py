@@ -4,6 +4,7 @@
 
 import numpy as np
 import math
+import multiprocessing
 
 
 
@@ -22,6 +23,22 @@ def dense_classification(X, units, params):
 def logistic(X, units, params):
     return 1 / (1 + math.e ** dense(X, units, params))
 
+# Multi-layer dense neural network with ReLU activation on all layers except the last
+def dense_relu_net(X, widths, params):
+    i = 0
+    values = X
+
+    for j, width in enumerate(widths):
+        layer_params_size = width * (values.shape[1] + 1)
+        values = dense(values, width, params[i:i + layer_params_size])
+
+        if j < len(widths) - 1:
+            values = np.maximum(0, values)
+
+        i += layer_params_size
+
+    return values
+
 
 
 # === Losses ===
@@ -38,19 +55,19 @@ def perceptron(X, Y):
 
 # === Algorithms ===
 
-def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_rate=0.001):
-    eye = np.eye(len(params)) * learning_rate / 100
-    param_changes = np.zeros_like(params)
+def gradient(X, Y, model, extra, loss, params_plus, params_minus, learning_rate, differentiation_ratio):
+    return -learning_rate * (loss(model(X, extra, params_plus), Y) - loss(model(X, extra, params_minus), Y)) / (learning_rate * differentiation_ratio * 2)
 
-    for _ in range(iterations):
-        params_repeated = np.array([list(params)] * len(params))
-        params_plus = params_repeated + eye
-        params_minus = params_repeated - eye
+def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_rate=0.001, differentiation_ratio=0.0001, pool_size=4):
+    with multiprocessing.Pool(pool_size) as pool:
+        eye = np.eye(len(params)) * learning_rate * differentiation_ratio
 
-        for i in range(len(params)):
-            param_changes[i] = -learning_rate * (loss(model(X, extra, params_plus[i]), Y) - loss(model(X, extra, params_minus[i]), Y)) / (learning_rate / 50)
+        for _ in range(iterations):
+            params_repeated = np.array([list(params)] * len(params))
+            params_plus = params_repeated + eye
+            params_minus = params_repeated - eye
+            args = [(X, Y, model, extra, loss, params_plus[i], params_minus[i], learning_rate, differentiation_ratio) for i in range(len(params))]
+            params += np.array(pool.starmap(gradient, args))
 
-        params += param_changes
-
-        if _ % 100 == 0:
-            print('Iteration: ' + str(_) + ', Loss: ' + str(loss(model(X, extra, params), Y)))
+            if _ % 100 == 0:
+                print('Iteration: ' + str(_) + ', Loss: ' + str(loss(model(X, extra, params), Y)))
