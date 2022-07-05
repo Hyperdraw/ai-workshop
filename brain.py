@@ -51,6 +51,9 @@ def mse(X, Y):
 def perceptron(X, Y):
     return np.maximum(-Y * X, 0).mean()
 
+def logloss(X, Y):
+    return -((Y * np.log(X) + (1 - Y) * np.log(1 - X)).mean())
+
 
 
 # === Algorithms ===

@@ -90,3 +90,4 @@ For example, for widths `[16, 16, 4]` expecting 8 inputs, the first two layers n
 
 * `mse` - Mean squared error
 * `perceptron` - Perceptron
+* `logloss` - Logistic loss
