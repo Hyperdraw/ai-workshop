@@ -21,7 +21,7 @@ def dense_classification(X, units, params):
 
 # Dense logistic (sigmoid) model
 def logistic(X, units, params):
-    return 1 / (1 + math.e ** dense(X, units, params))
+    return 1 / (1 + math.e ** (-dense(X, units, params)))
 
 # Multi-layer dense neural network with ReLU activation on all layers except the last
 def dense_relu_net(X, widths, params):
