@@ -56,6 +56,25 @@ def dense_relu_net(X, widths, params):
 
     return values
 
+# Multi-layer dense neural network with sigmoid activation on all layers
+# * widths - sequence of integers which are the number of units in each layer
+def dense_sigmoid_net(X, widths, params):
+    # Keep track of the starting index of the parameters for the current layer
+    i = 0
+    # Keep track of the current values
+    values = X
+
+    # For each layer...
+    for j, width in enumerate(widths):
+        # Determine the number of parameters this layer needs
+        layer_params_size = width * (values.shape[1] + 1)
+        # Calculate the output of `dense` and apply sigmoid activation
+        values = 1 / (1 + math.e ** (-dense(values, width, params[i:i + layer_params_size])))
+        # Move to the next parameters for the next layer
+        i += layer_params_size
+
+    return values
+
 
 
 # === Losses ===
@@ -90,7 +109,7 @@ def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_ra
 
         for _ in range(iterations):
             # A matrix where every row is the params vector - used to create params_plus and params_minus
-            params_repeated = np.array([list(params)] * len(params))
+            params_repeated = np.tile(params, params.size).reshape((params.size, params.size))
             # A matrix where every row is the params vector except the corresponding parameter is increased slightly
             params_plus = params_repeated + eye
             # A matrix where every row is the params vector except the corresponding parameter is decreased slightly
