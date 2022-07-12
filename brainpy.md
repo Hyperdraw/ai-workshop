@@ -88,22 +88,22 @@ Expects a number of parameters equal to the sum of the numbers of parameters req
 
 For example, for widths `[16, 16, 4]` expecting 8 inputs, the first two layers need `16 * (8 + 1) = 144` parameters and the last layer needs `4 * (8 + 1) = 36` parameters, so in total the model needs `144 * 2 + 36 = 324` parameters.
 
-# `dense_relu_net_sigmoid`
+### `dense_relu_net_sigmoid`
 
 Multi-layer dense neural network with ReLU activation on all layers except the last and sigmoid activation on the last.
 Same interface as `dense_relu_net`.
 
-# `dense_relu_new_softmax`
+### `dense_relu_new_softmax`
 
 Multi-layer dense neural network with ReLU activation on all layers except the last and softmax activation on the last.
 Same interface as `dense_relu_net`.
 
-# `dense_sigmoid_net`
+### `dense_sigmoid_net`
 
 Multi-layer dense neural network with sigmoid activation on all layers.
 Same interface as `dense_relu_net`.
 
-# `dense_sigmoid_net_softmax`
+### `dense_sigmoid_net_softmax`
 
 Multi-layer dense neural network with sigmoid activation on all layers except the last and softmax activation on the last.
 Same interface as `dense_relu_net`.
