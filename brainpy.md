@@ -35,7 +35,7 @@ and returns the loss as a single number.
 
 ## Gradient Descent API
 
-`def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_rate=0.001, differentiation_ratio=0.0001, pool_size=4)`
+`def gradient_descent(X, Y, model, extra, loss, params, iterations=1, learning_rate=0.001, differentiation_ratio=0.0001, pool_size=4, batch_size=32, print_period=100)`
 
 * `X`: 2D NumPy array - the input rows
 * `Y`: 2D NumPy array - the output rows
@@ -47,6 +47,8 @@ and returns the loss as a single number.
 * `learning_rate`: number - the learning rate (default 0.001)
 * `differentiation_ratio`: number - the proportion of the learning rate to use for numeric differentiation (the smaller the better) (default 0.0001)
 * `pool_size`: number - the number of worker processes to use when computing gradients (default 4)
+* `batch_size`: number - size of each batch (default 32)
+* `print-period`: number - number of iterations to wait between log prints (default 1)
 
 ## Usage Example (Two-Input, Two-Output Linear Regression)
 
@@ -86,8 +88,29 @@ Expects a number of parameters equal to the sum of the numbers of parameters req
 
 For example, for widths `[16, 16, 4]` expecting 8 inputs, the first two layers need `16 * (8 + 1) = 144` parameters and the last layer needs `4 * (8 + 1) = 36` parameters, so in total the model needs `144 * 2 + 36 = 324` parameters.
 
+# `dense_relu_net_sigmoid`
+
+Multi-layer dense neural network with ReLU activation on all layers except the last and sigmoid activation on the last.
+Same interface as `dense_relu_net`.
+
+# `dense_relu_new_softmax`
+
+Multi-layer dense neural network with ReLU activation on all layers except the last and softmax activation on the last.
+Same interface as `dense_relu_net`.
+
+# `dense_sigmoid_net`
+
+Multi-layer dense neural network with sigmoid activation on all layers.
+Same interface as `dense_relu_net`.
+
+# `dense_sigmoid_net_softmax`
+
+Multi-layer dense neural network with sigmoid activation on all layers except the last and softmax activation on the last.
+Same interface as `dense_relu_net`.
+
 ## Losses
 
 * `mse` - Mean squared error
 * `perceptron` - Perceptron
 * `logloss` - Logistic loss
+* `crossentropy` - Crossentropy loss
